@@ -6,7 +6,6 @@ const App = () => {
   return (
     <View
       style={{
-        paddingTop: Platform.OS == 'android' ? StatusBar.currentHeight : 45,
         flex: 1,
       }}>
       <RootNavigation />
