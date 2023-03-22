@@ -17,8 +17,8 @@ import {
 interface AuthButtonProps {
   onPress: (event: GestureResponderEvent) => void;
   buttonText: string;
-  buttonStyle: ViewStyle;
-  textStyle: TextStyle;
+  buttonStyle?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({
