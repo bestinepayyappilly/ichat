@@ -17,12 +17,15 @@ const Home = () => {
   const [rooms, setRooms] = useState([]);
   const navigation = useNavigation();
   const getChatRooms = async () => {
-    const chatrooms = await firestore().collection('users').get();
-    const q = chatrooms.query.orderBy('createdAt', 'desc');
+    const chatrooms = await firestore().collection('chatrooms').get();
+
+    const q = chatrooms.query.isEqual('collectionID', 'EbFJILu92mAPUcSCEwhn');
+    const rooms = [];
     const unsubscribe = q.onSnapshot(snapshot => {
       snapshot.docs.map(e => {
-        console.log(e.data());
+        rooms.push(e.data());
       });
+      setRooms(rooms);
     });
     return unsubscribe;
   };
@@ -62,10 +65,10 @@ const Home = () => {
                     justifyContent: 'center',
                     overflow: 'hidden',
                   }}>
-                  <Image
+                  {/* <Image
                     source={{uri: value.image}}
                     style={{height: 100, width: 100}}
-                  />
+                  /> */}
                 </View>
                 <Text>{value.name}</Text>
               </TouchableOpacity>

@@ -2,10 +2,7 @@ import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import AuthStack from '../stacks/AuthStack/AuthStack';
-import HomeStack from '../stacks/HomeStack/HomeStack';
-import SettingStack from '../stacks/SettingStack/SettingStack';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import {handleInitialization} from '../functions/authenticate';
 import SplashScreen from '../stacks/AuthStack/SplashScreen/SplashScreen';
 import MainTab from '../stacks/HomeStack/HomeStack';
 
