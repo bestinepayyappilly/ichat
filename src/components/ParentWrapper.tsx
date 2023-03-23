@@ -30,7 +30,7 @@ const ParentWrapper: React.FC<ParentWrapperProps> = ({
   },
 }) => {
   return (
-    <LinearGradient colors={['#00B4DB', '#0083B0']} style={parentStyle}>
+    <LinearGradient colors={['#4e54c8', '#8f94fb']} style={parentStyle}>
       <StatusBar {...statusBarProps} />
       {children}
     </LinearGradient>
