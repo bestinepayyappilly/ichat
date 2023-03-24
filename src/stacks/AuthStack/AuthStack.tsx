@@ -3,10 +3,12 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './Login';
 import Signup from './Signup';
+import SplashScreen from './SplashScreen/SplashScreen';
 
 const AuthStack = () => {
   const Stack = createStackNavigator();
   const AUTHNAVIGATIONNAMES = {
+    SPLASH_SCREEN: 'SPLASH_SCREEN',
     LOGIN: 'LOGIN',
     SIGNUP: 'SIGNUP',
   };
