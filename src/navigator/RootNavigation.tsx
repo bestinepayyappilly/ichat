@@ -1,10 +1,11 @@
 import {StatusBar, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import AuthStack from '../stacks/AuthStack/AuthStack';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import SplashScreen from '../stacks/AuthStack/SplashScreen/SplashScreen';
 import MainTab from '../stacks/HomeStack/HomeStack';
+import Chats from '../stacks/HomeStack/Chats/Chats';
 
 export const ROOTNAVIGATIONNAMES = {
   AUTH_STACK: 'AUTH_STACK',
@@ -17,20 +18,26 @@ const RootNavigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={ROOTNAVIGATIONNAMES.SPLASH_SCREEN}
-        screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName={ROOTNAVIGATIONNAMES.SPLASH_SCREEN}>
         <Stack.Screen
           name={ROOTNAVIGATIONNAMES.SPLASH_SCREEN}
           component={SplashScreen}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name={ROOTNAVIGATIONNAMES.AUTH_STACK}
           component={AuthStack}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name={ROOTNAVIGATIONNAMES.HOME_STACK}
           component={MainTab}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Chats"
+          component={Chats}
+          options={{headerShown: true, cardStyle: {backgroundColor: '#fff'}}}
         />
       </Stack.Navigator>
     </NavigationContainer>
