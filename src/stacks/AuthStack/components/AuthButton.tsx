@@ -25,10 +25,10 @@ const AuthButton: React.FC<AuthButtonProps> = ({
   onPress,
   buttonText = 'button text',
   buttonStyle = {
-    backgroundColor: '#000',
+    backgroundColor: '#405DE6',
     height: ScreenHeight * 0.06,
     width: ScreenWidth * 0.7,
-    marginVertical: padding.p16,
+    marginVertical: padding.p20,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',

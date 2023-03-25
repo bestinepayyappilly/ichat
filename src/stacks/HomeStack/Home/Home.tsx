@@ -12,8 +12,15 @@ import React, {useEffect, useState} from 'react';
 import ParentWrapper from '../../../components/ParentWrapper';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
-import {padding, ScreenHeight} from '../../../utils/dimensions';
-import {useSelector, useDispatch} from 'react-redux';
+import {padding, ScreenHeight, ScreenWidth} from '../../../utils/dimensions';
+import {useSelector} from 'react-redux';
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
@@ -21,7 +28,7 @@ const Home = () => {
   const state = useSelector(state => {
     return state;
   });
-  console.log(state);
+
   const getChatRooms = async () => {
     const chatrooms = await firestore().collection('chatrooms').get();
     const q = chatrooms.query.orderBy('name', 'desc');
@@ -42,8 +49,38 @@ const Home = () => {
   useEffect(() => {
     getChatRooms();
   }, []);
+  useEffect(() => {
+    animatedValue.value = withTiming(1, {duration: 1000});
+  }, []);
+
+  const animatedValue = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            animatedValue.value,
+            [0, 0.5, 1],
+            [50, -10, 0],
+            Extrapolate.CLAMP,
+          ),
+        },
+        {
+          scale: interpolate(
+            animatedValue.value,
+            [0, 1],
+            [1.3, 1],
+            Extrapolate.CLAMP,
+          ),
+        },
+      ],
+      opacity: animatedValue.value,
+    };
+  }, []);
+
   return (
     <ParentWrapper
+      colors={['#fff', '#fff']}
       statusBarProps={{
         barStyle: 'light-content',
         translucent: true,
@@ -58,47 +95,82 @@ const Home = () => {
       }}>
       <View
         style={{
-          marginHorizontal: padding.p10,
-          padding: padding.p5,
+          alignItems: 'center',
           flexDirection: 'row',
           justifyContent: 'space-between',
-        }}></View>
+          paddingHorizontal: padding.p10,
+          paddingBottom: padding.p10,
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Image
+            source={require('../../../assets/images/logo.png')}
+            style={{height: ScreenHeight * 0.06, width: ScreenHeight * 0.06}}
+          />
+          <Text style={{fontSize: 26, fontWeight: '700', color: '#000'}}>
+            ChatRooms
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={{
+            padding: padding.p8,
+            backgroundColor: '#d3d3d3',
+            borderRadius: 8,
+            elevation: 3,
+          }}>
+          <Image
+            source={require('../../../assets/images/plus.png')}
+            style={{height: 30, width: 30}}
+          />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         fadingEdgeLength={200}
         contentContainerStyle={{
-          flexDirection: 'row',
-          flex: 1,
-          flexWrap: 'wrap',
-          alignItems: 'center',
           justifyContent: 'center',
         }}>
         {rooms &&
           rooms.map((value, index) => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Chats', {
-                    chatRoomName: value.name,
-                    chatRoomId: value.id,
-                  });
-                }}
-                style={{alignItems: 'center'}}>
-                <View
-                  style={{
-                    height: ScreenHeight * 0.15,
-                    width: ScreenHeight * 0.15,
-                    marginHorizontal: 20,
-                    marginVertical: 10,
-                    backgroundColor: '#FDE12D',
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                  }}></View>
-                <Text style={{fontWeight: '700', fontSize: 15}}>
-                  {value.name}
-                </Text>
-              </TouchableOpacity>
+              <View style={{flex: 1}}>
+                <Animated.View style={animatedStyle}>
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      navigation.navigate('Chats', {
+                        chatRoomName: value.name,
+                        chatRoomId: value.id,
+                      });
+                    }}>
+                    <View
+                      style={{
+                        padding: padding.p20,
+                        overflow: 'hidden',
+                        flexDirection: 'row',
+                        borderBottomWidth: index + 1 == rooms.length ? 0 : 0.5,
+                      }}>
+                      <View
+                        style={{
+                          height: 60,
+                          width: 60,
+                          borderRadius: 100,
+                          backgroundColor: '#d3d3d3',
+                          elevation: 2,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text style={{fontWeight: '900', fontSize: 20}}>
+                          {value.name[0].toUpperCase()}
+                        </Text>
+                      </View>
+                      <View style={{padding: padding.p10}}>
+                        <Text style={{fontWeight: '700', fontSize: 15}}>
+                          {value.name.toUpperCase()}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </Animated.View>
+              </View>
             );
           })}
       </ScrollView>

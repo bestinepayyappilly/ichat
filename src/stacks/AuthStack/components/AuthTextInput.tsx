@@ -30,16 +30,17 @@ const AuthTextInput: React.FC<AuthTextInputProps> = ({
   placeholder = 'place-holder',
 
   inputStyle = {
-    backgroundColor: '#000',
+    backgroundColor: '#d3d3d3',
     height: ScreenHeight * 0.05,
     borderRadius: 5,
     fontSize: fontSize.f2,
     paddingHorizontal: padding.p8,
-    color: '#fff',
+    color: '#000',
   },
   titleStyle = {
     fontSize: fontSize.f3,
     marginBottom: padding.p10,
+    color: '#D3D3D3',
   },
   textInputProps,
 }) => {
@@ -47,7 +48,7 @@ const AuthTextInput: React.FC<AuthTextInputProps> = ({
     <View style={containerStyle}>
       {title ? <Text style={titleStyle}>{title}</Text> : <View />}
       <TextInput
-        placeholderTextColor={'#fff'}
+        placeholderTextColor={'#000'}
         onChangeText={onChangeText}
         placeholder={placeholder}
         style={inputStyle}

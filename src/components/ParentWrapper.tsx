@@ -13,6 +13,7 @@ interface ParentWrapperProps {
   children: ReactNode;
   parentStyle?: ViewStyle;
   statusBarProps?: StatusBarProps;
+  colors: string[];
 }
 
 const ParentWrapper: React.FC<ParentWrapperProps> = ({
@@ -28,12 +29,15 @@ const ParentWrapper: React.FC<ParentWrapperProps> = ({
     backgroundColor: 'transparent',
     translucent: true,
   },
+  colors = ['#000', '#000'],
 }) => {
   return (
-    <LinearGradient colors={['#C9D6FF', '#E2E2E2']} style={parentStyle}>
-      <StatusBar {...statusBarProps} />
-      {children}
-    </LinearGradient>
+    <View style={{flex: 1}}>
+      <LinearGradient colors={colors} style={parentStyle}>
+        <StatusBar {...statusBarProps} />
+        {children}
+      </LinearGradient>
+    </View>
   );
 };
 

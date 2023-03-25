@@ -182,7 +182,7 @@ const Chats = ({route}) => {
         );
       }}
       renderDay={({currentMessage}) => {
-        return <View />;
+        return <View></View>;
       }}
       renderTime={({currentMessage}) => {
         return (

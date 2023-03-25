@@ -1,9 +1,19 @@
-import {Platform, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import ParentWrapper from '../../../components/ParentWrapper';
 import {padding} from '../../../utils/dimensions';
+import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 
 const Settings = () => {
+  const navigation = useNavigation();
   return (
     <ParentWrapper
       statusBarProps={{
@@ -17,7 +27,17 @@ const Settings = () => {
         borderRadius: 15,
         marginTop: padding.p25,
         marginHorizontal: padding.p6,
-      }}></ParentWrapper>
+      }}>
+      <TouchableOpacity
+        style={{height: 100, width: '100%', backgroundColor: 'blue'}}
+        onPress={() => {
+          auth()
+            .signOut()
+            .then(() => {
+              navigation.replace('SPLASH_SCREEN');
+            });
+        }}></TouchableOpacity>
+    </ParentWrapper>
   );
 };
 

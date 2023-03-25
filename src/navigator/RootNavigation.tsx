@@ -1,11 +1,10 @@
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import AuthStack from '../stacks/AuthStack/AuthStack';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import SplashScreen from '../stacks/AuthStack/SplashScreen/SplashScreen';
-import MainTab from '../stacks/HomeStack/HomeStack';
-import Chats from '../stacks/HomeStack/Chats/Chats';
+import {HomeStack} from '../stacks/HomeStack/HomeStack';
 
 export const ROOTNAVIGATIONNAMES = {
   AUTH_STACK: 'AUTH_STACK',
@@ -15,7 +14,6 @@ export const ROOTNAVIGATIONNAMES = {
 
 const RootNavigation = () => {
   const Stack = createStackNavigator();
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={ROOTNAVIGATIONNAMES.SPLASH_SCREEN}>
@@ -31,13 +29,8 @@ const RootNavigation = () => {
         />
         <Stack.Screen
           name={ROOTNAVIGATIONNAMES.HOME_STACK}
-          component={MainTab}
+          component={HomeStack}
           options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Chats"
-          component={Chats}
-          options={{headerShown: true, cardStyle: {backgroundColor: '#fff'}}}
         />
       </Stack.Navigator>
     </NavigationContainer>

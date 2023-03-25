@@ -1,7 +1,8 @@
 import auth from '@react-native-firebase/auth';
-import {ROOTNAVIGATIONNAMES} from '../navigator/RootNavigation';
+import {useDispatch} from 'react-redux';
+
+import {updateDetails} from '../redux/actions/updateUserDetails';
 import {getAuthState} from '../utils/getAuthState';
-import firestore from '@react-native-firebase/firestore';
 
 export const signUp = (username: string, password: string) => {
   return auth()
@@ -36,11 +37,14 @@ export const signUp = (username: string, password: string) => {
 };
 
 export const handleInitialization = () => {
-  const {state} = getAuthState();
+  const {state, email, uuid, name} = getAuthState();
+  const dispatch = useDispatch();
+  const data = {email: email, _id: uuid, name: name, avatar: ''};
+  state == 'authenticated' ? dispatch(updateDetails(data)) : null;
   if (state == 'authenticated') {
-    return {route_name: ROOTNAVIGATIONNAMES.HOME_STACK};
+    return {route_name: 'HOME_STACK'};
   } else if (state == 'unauthenticated') {
-    return {route_name: ROOTNAVIGATIONNAMES.AUTH_STACK};
+    return {route_name: 'AUTH_STACK'};
   } else {
     return {route_name: 'LOADING'};
   }
