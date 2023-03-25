@@ -11,9 +11,12 @@ import ParentWrapper from '../../../components/ParentWrapper';
 import {padding} from '../../../utils/dimensions';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
+import {SignOut} from '../../../redux/actions/signOut';
 
 const Settings = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   return (
     <ParentWrapper
       statusBarProps={{
@@ -34,6 +37,7 @@ const Settings = () => {
           auth()
             .signOut()
             .then(() => {
+              dispatch(SignOut());
               navigation.replace('SPLASH_SCREEN');
             });
         }}></TouchableOpacity>

@@ -25,6 +25,7 @@ import Animated, {
 const Signup = () => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
   const [error, setError] = useState({
     username: '',
     password: '',
@@ -54,7 +55,7 @@ const Signup = () => {
     if (error.password?.length > 2 || error.username?.length > 2) {
       ToastAndroid.show(error.password ? error.password : error.username, 100);
     } else {
-      const {state, message} = await signUp(userName, password);
+      const {state, message} = await signUp(userName, password, firstName);
       if (state == 'success') {
         navigation.replace('HOME_STACK');
       }
@@ -111,6 +112,18 @@ const Signup = () => {
           }}>
           Register
         </Text>
+        <AuthTextInput
+          title="FirstName"
+          containerStyle={{
+            height: ScreenHeight * 0.1,
+            width: ScreenWidth * 0.95,
+          }}
+          onChangeText={value => {
+            setFirstName(value);
+          }}
+          placeholder={'John Doe'}
+          textInputProps={{value: firstName, textContentType: 'name'}}
+        />
         <AuthTextInput
           title="Username"
           containerStyle={{

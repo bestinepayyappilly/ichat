@@ -32,12 +32,10 @@ const ParentWrapper: React.FC<ParentWrapperProps> = ({
   colors = ['#000', '#000'],
 }) => {
   return (
-    <View style={{flex: 1}}>
-      <LinearGradient colors={colors} style={parentStyle}>
-        <StatusBar {...statusBarProps} />
-        {children}
-      </LinearGradient>
-    </View>
+    <LinearGradient colors={colors} style={parentStyle}>
+      <StatusBar {...statusBarProps} />
+      {children}
+    </LinearGradient>
   );
 };
 

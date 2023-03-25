@@ -4,14 +4,20 @@ import {useDispatch} from 'react-redux';
 import {updateDetails} from '../redux/actions/updateUserDetails';
 import {getAuthState} from '../utils/getAuthState';
 
-export const signUp = (username: string, password: string) => {
+export const signUp = (username: string, password: string, name: string) => {
   return auth()
     .createUserWithEmailAndPassword(username, password)
-    .then(() => {
-      return {
-        state: 'success',
-        message: 'Account created successfully',
-      };
+    .then(async () => {
+      return await auth()
+        .currentUser?.updateProfile({
+          displayName: name,
+        })
+        .then(() => {
+          return {
+            state: 'success',
+            message: 'Account created successfully',
+          };
+        });
     })
 
     .catch(error => {

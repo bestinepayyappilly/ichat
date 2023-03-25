@@ -1,6 +1,7 @@
 import {
   Alert,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,6 +14,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {padding, ScreenWidth} from '../../../utils/dimensions';
+import storage from '@react-native-firebase/storage';
 const ImagePicker = require('react-native-image-picker');
 interface chatBody {
   _id: string | number;
@@ -38,6 +40,7 @@ const Chats = ({route}) => {
   const state = useSelector(state => {
     return state;
   });
+  console.log(state);
 
   const getChats = async () => {
     const chats = await firestore()
@@ -45,7 +48,7 @@ const Chats = ({route}) => {
       .get();
     const q = chats.query.orderBy('createdAt', 'desc');
     const unsubscribe = q.onSnapshot((snapshot: any) => {
-      setChats(snapshot.docs.map((e: any) => e.data()));
+      setChats(snapshot?.docs?.map((e: any) => e.data()));
     });
 
     return unsubscribe;
@@ -65,6 +68,17 @@ const Chats = ({route}) => {
   useLayoutEffect(() => {
     getChats();
   }, []);
+
+  const uploadImage = async (fileName: string, uri: string) => {
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    const task = storage().ref(fileName).putFile(uploadUri);
+    try {
+      await task;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const selectImage = () => {
     let options = {
       mediaType: 'photo',
@@ -88,6 +102,19 @@ const Chats = ({route}) => {
         Alert.alert(response.errorMessage);
         return;
       }
+
+      const {base64, uri, width, height, fileSize, type, fileName} = response;
+
+      uploadImage(fileName, uri);
+      const data = {
+        _id: String,
+        createdAt: new Date(),
+        text: 'fdsfsd',
+        user: {_id: '', avatar: '', email: '', name: ''},
+      };
+      // onSend({
+      //   _id
+      // })
       console.log('base64 -> ', response.base64);
       console.log('uri -> ', response.uri);
       console.log('width -> ', response.width);
@@ -102,6 +129,17 @@ const Chats = ({route}) => {
   console.log(route.params);
   return (
     <GiftedChat
+      showAvatarForEveryMessage={false}
+      showUserAvatar={false}
+      renderMessageImage={({currentMessage}) => {
+        return currentMessage?.image ? (
+          <View style={{height: 200, width: 200, backgroundColor: 'red'}}>
+            <Image source={require('../../../assets/images/logo.png')} />
+          </View>
+        ) : (
+          <View />
+        );
+      }}
       renderActions={() => {
         return (
           <TouchableOpacity
@@ -181,8 +219,23 @@ const Chats = ({route}) => {
           </View>
         );
       }}
-      renderDay={({currentMessage}) => {
-        return <View></View>;
+      renderDay={({currentMessage, previousMessage}) => {
+        const prevDate = moment
+          .unix(previousMessage?.createdAt?.seconds)
+          .format('DD');
+        const currentDate = moment
+          .unix(currentMessage?.createdAt.seconds)
+          .format('DD');
+
+        return +currentDate - +prevDate > 0 ? (
+          <View style={{alignItems: 'center'}}>
+            <Text>
+              {moment.unix(previousMessage?.createdAt?.seconds).format('LL')}
+            </Text>
+          </View>
+        ) : (
+          <View />
+        );
       }}
       renderTime={({currentMessage}) => {
         return (

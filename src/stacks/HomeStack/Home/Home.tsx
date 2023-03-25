@@ -131,46 +131,42 @@ const Home = () => {
         {rooms &&
           rooms.map((value, index) => {
             return (
-              <View style={{flex: 1}}>
-                <Animated.View style={animatedStyle}>
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      navigation.navigate('Chats', {
-                        chatRoomName: value.name,
-                        chatRoomId: value.id,
-                      });
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  navigation.navigate('Chats', {
+                    chatRoomName: value.name,
+                    chatRoomId: value.id,
+                  });
+                }}>
+                <View
+                  style={{
+                    padding: padding.p20,
+                    overflow: 'hidden',
+                    flexDirection: 'row',
+                    borderBottomWidth: index + 1 == rooms.length ? 0 : 0.5,
+                  }}>
+                  <View
+                    style={{
+                      height: 60,
+                      width: 60,
+                      borderRadius: 100,
+                      backgroundColor: '#d3d3d3',
+                      elevation: 2,
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}>
-                    <View
-                      style={{
-                        padding: padding.p20,
-                        overflow: 'hidden',
-                        flexDirection: 'row',
-                        borderBottomWidth: index + 1 == rooms.length ? 0 : 0.5,
-                      }}>
-                      <View
-                        style={{
-                          height: 60,
-                          width: 60,
-                          borderRadius: 100,
-                          backgroundColor: '#d3d3d3',
-                          elevation: 2,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={{fontWeight: '900', fontSize: 20}}>
-                          {value.name[0].toUpperCase()}
-                        </Text>
-                      </View>
-                      <View style={{padding: padding.p10}}>
-                        <Text style={{fontWeight: '700', fontSize: 15}}>
-                          {value.name.toUpperCase()}
-                        </Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </Animated.View>
-              </View>
+                    <Text style={{fontWeight: '900', fontSize: 20}}>
+                      {value.name[0].toUpperCase()}
+                    </Text>
+                  </View>
+                  <View style={{padding: padding.p10}}>
+                    <Text style={{fontWeight: '700', fontSize: 15}}>
+                      {value.name.toUpperCase()}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
             );
           })}
       </ScrollView>
