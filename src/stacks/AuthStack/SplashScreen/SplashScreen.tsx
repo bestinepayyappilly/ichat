@@ -16,8 +16,10 @@ const SplashScreen = () => {
   useEffect(() => {
     if (state == 'authenticated') {
       const data = {email: email, _id: uuid, name: name, avatar: ''};
-      dispatch(updateDetails(data));
-      navigation.replace('HOME_STACK');
+      if (data) {
+        dispatch(updateDetails(data));
+        navigation.replace('HOME_STACK');
+      }
     } else if (state == 'unauthenticated') {
       navigation.replace('AUTH_STACK');
     } else {

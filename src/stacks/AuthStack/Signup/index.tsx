@@ -1,11 +1,4 @@
-import {
-  Image,
-  StatusBar,
-  StyleSheet,
-  Text,
-  ToastAndroid,
-  View,
-} from 'react-native';
+import {StatusBar, StyleSheet, Text, ToastAndroid} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AuthTextInput from '../components/AuthTextInput';
 import {padding, ScreenHeight, ScreenWidth} from '../../../utils/dimensions';
@@ -13,7 +6,6 @@ import ParentWrapper from '../../../components/ParentWrapper';
 import AuthButton from '../components/AuthButton';
 import {signUp} from '../../../functions/authenticate';
 import {useNavigation} from '@react-navigation/native';
-
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -31,7 +23,7 @@ const Signup = () => {
     password: '',
   });
   useEffect(() => {
-    animatedValue.value = withTiming(1, {duration: 1000});
+    animatedValue.value = withTiming(1, {duration: 800});
     bodyAnimatedValue.value = withDelay(1000, withTiming(1, {duration: 1000}));
   }, []);
   const navigation = useNavigation();
@@ -57,7 +49,7 @@ const Signup = () => {
     } else {
       const {state, message} = await signUp(userName, password, firstName);
       if (state == 'success') {
-        navigation.replace('HOME_STACK');
+        navigation.replace('SPLASH_SCREEN');
       }
       ToastAndroid.show(message, 100);
     }
@@ -87,7 +79,7 @@ const Signup = () => {
       <StatusBar
         translucent
         backgroundColor={'transparent'}
-        barStyle="dark-content"
+        barStyle="light-content"
       />
       <Animated.Image
         source={require('../../../assets/images/logo.png')}
@@ -105,7 +97,7 @@ const Signup = () => {
           style={{
             fontWeight: '700',
             alignSelf: 'flex-start',
-            marginHorizontal: padding.p5,
+
             marginVertical: padding.p20,
             fontSize: 36,
             color: '#f5f5f5',
@@ -117,6 +109,7 @@ const Signup = () => {
           containerStyle={{
             height: ScreenHeight * 0.1,
             width: ScreenWidth * 0.95,
+            marginVertical: padding.p5,
           }}
           onChangeText={value => {
             setFirstName(value);
@@ -129,6 +122,7 @@ const Signup = () => {
           containerStyle={{
             height: ScreenHeight * 0.1,
             width: ScreenWidth * 0.95,
+            marginVertical: padding.p5,
           }}
           onChangeText={value => {
             setUserName(value);
@@ -141,6 +135,7 @@ const Signup = () => {
           containerStyle={{
             height: ScreenHeight * 0.1,
             width: ScreenWidth * 0.95,
+            marginVertical: padding.p5,
           }}
           onChangeText={value => {
             setPassword(value);

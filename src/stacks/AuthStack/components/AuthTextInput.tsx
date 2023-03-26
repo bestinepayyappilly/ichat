@@ -28,13 +28,12 @@ const AuthTextInput: React.FC<AuthTextInputProps> = ({
   onChangeText,
   title,
   placeholder = 'place-holder',
-
   inputStyle = {
     backgroundColor: '#d3d3d3',
-    height: ScreenHeight * 0.05,
+    height: ScreenHeight * 0.06,
     borderRadius: 5,
     fontSize: fontSize.f2,
-    paddingHorizontal: padding.p8,
+    paddingHorizontal: padding.p9,
     color: '#000',
   },
   titleStyle = {

@@ -1,25 +1,28 @@
 import auth from '@react-native-firebase/auth';
-import {useDispatch} from 'react-redux';
-
-import {updateDetails} from '../redux/actions/updateUserDetails';
+import firestore from '@react-native-firebase/firestore';
 import {getAuthState} from '../utils/getAuthState';
 
 export const signUp = (username: string, password: string, name: string) => {
   return auth()
     .createUserWithEmailAndPassword(username, password)
-    .then(async () => {
-      return await auth()
-        .currentUser?.updateProfile({
-          displayName: name,
-        })
-        .then(() => {
-          return {
-            state: 'success',
-            message: 'Account created successfully',
-          };
-        });
+    .then(data => {
+      return data.user.updateProfile({displayName: name}).then(() => {
+        return firestore()
+          .collection('users')
+          .add({
+            _id: data.user.uid,
+            email: data.user.email,
+            createdAt: data.user.metadata.creationTime,
+            displayName: name,
+          })
+          .then(() => {
+            return {
+              state: 'success',
+              message: 'Account created successfully',
+            };
+          });
+      });
     })
-
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
         return {
@@ -44,11 +47,8 @@ export const signUp = (username: string, password: string, name: string) => {
 
 export const handleInitialization = () => {
   const {state, email, uuid, name} = getAuthState();
-  const dispatch = useDispatch();
-  const data = {email: email, _id: uuid, name: name, avatar: ''};
-  state == 'authenticated' ? dispatch(updateDetails(data)) : null;
   if (state == 'authenticated') {
-    return {route_name: 'HOME_STACK'};
+    return {route_name: 'SPLASH_SCREEN'};
   } else if (state == 'unauthenticated') {
     return {route_name: 'AUTH_STACK'};
   } else {

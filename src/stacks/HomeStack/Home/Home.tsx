@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   Platform,
   ScrollView,
@@ -8,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import ParentWrapper from '../../../components/ParentWrapper';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
@@ -24,27 +25,31 @@ import Animated, {
 
 const Home = () => {
   const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const state = useSelector(state => {
     return state;
   });
+  console.log(state);
 
   const getChatRooms = async () => {
     const chatrooms = await firestore().collection('chatrooms').get();
-    const q = chatrooms.query.orderBy('name', 'desc');
+    const q = chatrooms.query.orderBy('name', 'asc');
     const unsubscribe = q.onSnapshot(snapshot => {
       setRooms(
         snapshot?.docs?.map(e => {
+          setLoading(false);
           return e.data();
         }),
       );
     });
     return unsubscribe;
   };
+  console.log(rooms);
 
   const createNewChatRooms = (name, image) => {
     console.log(rooms);
-    firestore().collection('chatrooms').add({name: 'Party'});
+    firestore().collection('chatrooms/users').add({name: 'Party'});
   };
   useEffect(() => {
     getChatRooms();
@@ -78,52 +83,70 @@ const Home = () => {
     };
   }, []);
 
-  return (
+  useLayoutEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+  }, []);
+
+  return loading ? (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <ActivityIndicator />
+    </View>
+  ) : (
     <ParentWrapper
       colors={['#fff', '#fff']}
-      statusBarProps={{
-        barStyle: 'light-content',
-        translucent: true,
-        backgroundColor: 'transparent',
-      }}
       parentStyle={{
         flex: 1,
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 45,
-        borderRadius: 15,
-        marginTop: padding.p25,
-        marginHorizontal: padding.p6,
+        paddingTop:
+          Platform.OS === 'android' ? StatusBar.currentHeight * 2 : 45,
+
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+
+        marginHorizontal: 2,
       }}>
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingHorizontal: padding.p10,
-          paddingBottom: padding.p10,
-        }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image
-            source={require('../../../assets/images/logo.png')}
-            style={{height: ScreenHeight * 0.06, width: ScreenHeight * 0.06}}
-          />
-          <Text style={{fontSize: 26, fontWeight: '700', color: '#000'}}>
-            ChatRooms
-          </Text>
-        </View>
-        <TouchableOpacity
+      <View style={{paddingHorizontal: padding.p10}}>
+        <View
           style={{
-            padding: padding.p8,
-            backgroundColor: '#d3d3d3',
-            borderRadius: 8,
-            elevation: 3,
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+
+            paddingBottom: padding.p10,
           }}>
-          <Image
-            source={require('../../../assets/images/plus.png')}
-            style={{height: 30, width: 30}}
-          />
-        </TouchableOpacity>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={require('../../../assets/images/logo.png')}
+              style={{height: ScreenHeight * 0.06, width: ScreenHeight * 0.06}}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AddChatRoom');
+            }}
+            style={{
+              padding: padding.p8,
+              backgroundColor: '#242423',
+              borderRadius: 10,
+              elevation: 1,
+            }}>
+            <Image
+              source={require('../../../assets/images/plus.png')}
+              style={{height: 30, width: 30, tintColor: '#fff'}}
+            />
+          </TouchableOpacity>
+        </View>
+        <Text
+          style={{
+            fontSize: 36,
+            fontWeight: '700',
+            color: '#000',
+            marginLeft: padding.p6,
+          }}>
+          Chatrooms
+        </Text>
       </View>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         fadingEdgeLength={200}
         contentContainerStyle={{
           justifyContent: 'center',
@@ -145,23 +168,30 @@ const Home = () => {
                     overflow: 'hidden',
                     flexDirection: 'row',
                     borderBottomWidth: index + 1 == rooms.length ? 0 : 0.5,
+                    alignItems: 'center',
                   }}>
                   <View
                     style={{
-                      height: 60,
-                      width: 60,
+                      height: 70,
+                      width: 70,
                       borderRadius: 100,
-                      backgroundColor: '#d3d3d3',
-                      elevation: 2,
+                      backgroundColor: '#141b41',
+                      elevation: 1,
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <Text style={{fontWeight: '900', fontSize: 20}}>
+                    <Text
+                      style={{
+                        fontWeight: '900',
+                        fontSize: 20,
+                        color: '#fff',
+                      }}>
                       {value.name[0].toUpperCase()}
                     </Text>
                   </View>
                   <View style={{padding: padding.p10}}>
-                    <Text style={{fontWeight: '700', fontSize: 15}}>
+                    <Text
+                      style={{fontWeight: '700', fontSize: 16, color: '#000'}}>
                       {value.name.toUpperCase()}
                     </Text>
                   </View>

@@ -3,8 +3,14 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './Home/Home';
 import Settings from './Settings/Settings';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 import Chats from './Chats/Chats';
+import ImageScreen from './ImageScreen/ImageScreen';
+import AddChats from './AddChatScreen/AddChats';
 
 export const HomeStack = () => {
   const Stack = createStackNavigator();
@@ -18,7 +24,27 @@ export const HomeStack = () => {
       <Stack.Screen
         name="Chats"
         component={Chats}
+        options={{
+          headerShown: true,
+          cardStyle: {backgroundColor: '#fff'},
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          headerStyle: {backgroundColor: '#2b9348'},
+        }}
+      />
+      <Stack.Screen
+        name="ImageScreen"
+        component={ImageScreen}
         options={{headerShown: true, cardStyle: {backgroundColor: '#fff'}}}
+      />
+      <Stack.Screen
+        name="AddChatRoom"
+        component={AddChats}
+        options={{
+          headerShown: true,
+          cardStyle: {backgroundColor: '#fff'},
+          presentation: 'modal',
+          ...TransitionPresets.ModalPresentationIOS,
+        }}
       />
     </Stack.Navigator>
   );
