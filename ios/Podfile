@@ -43,6 +43,9 @@ target 'ichat' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
+  
   target 'ichatTests' do
     inherit! :complete
     # Pods for testing

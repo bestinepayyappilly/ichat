@@ -1,12 +1,12 @@
 // @ts-ignore
-import {StyleSheet} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
 import ParentWrapper from '../../../components/ParentWrapper';
 import {getAuthState} from '../../../utils/getAuthState';
 import {useNavigation} from '@react-navigation/native';
-import {ROOTNAVIGATIONNAMES} from '../../../navigator/RootNavigation';
 import {useDispatch} from 'react-redux';
 import {updateDetails} from '../../../redux/actions/updateUserDetails';
+import {padding, ScreenHeight} from '../../../utils/dimensions';
 const SplashScreen = () => {
   const navigation = useNavigation();
   const {state, email, uuid, name} = getAuthState();
@@ -16,16 +16,34 @@ const SplashScreen = () => {
   useEffect(() => {
     if (state == 'authenticated') {
       const data = {email: email, _id: uuid, name: name, avatar: ''};
-      dispatch(updateDetails(data));
-      navigation.replace(ROOTNAVIGATIONNAMES.HOME_STACK);
+      if (data) {
+        dispatch(updateDetails(data));
+        navigation.replace('HOME_STACK');
+      }
     } else if (state == 'unauthenticated') {
-      navigation.replace(ROOTNAVIGATIONNAMES.AUTH_STACK);
+      navigation.replace('AUTH_STACK');
     } else {
       console.log(state);
     }
   }, [state]);
 
-  return <ParentWrapper></ParentWrapper>;
+  return (
+    <ParentWrapper>
+      <Image
+        style={{
+          height: ScreenHeight * 0.12,
+          width: ScreenHeight * 0.12,
+          marginVertical: padding.p20,
+          transform: [
+            {
+              scale: 3,
+            },
+          ],
+        }}
+        source={require('../../../assets/images/logo.png')}
+      />
+    </ParentWrapper>
+  );
 };
 
 export default SplashScreen;

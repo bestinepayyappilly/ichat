@@ -20,6 +20,7 @@ export const getAuthState = () => {
   const [user, setUser] = useState<user>();
 
   const onAuthStateChanged = (user: user) => {
+    console.log(user);
     setUser(user);
     if (initializing) setInitializing(false);
   };

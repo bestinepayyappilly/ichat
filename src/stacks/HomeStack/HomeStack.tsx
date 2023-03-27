@@ -3,16 +3,48 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './Home/Home';
 import Settings from './Settings/Settings';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
+import Chats from './Chats/Chats';
+import ImageScreen from './ImageScreen/ImageScreen';
+import AddChats from './AddChatScreen/AddChats';
 
-const HomeStack = () => {
+export const HomeStack = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator>
       <Stack.Screen
         name="HomeScreen"
-        component={Home}
-        options={{cardStyle: {backgroundColor: '#000'}}}
+        component={MainTab}
+        options={{cardStyle: {backgroundColor: '#000'}, headerShown: false}}
+      />
+      <Stack.Screen
+        name="Chats"
+        component={Chats}
+        options={{
+          headerShown: true,
+          cardStyle: {backgroundColor: '#fff'},
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          headerStyle: {backgroundColor: '#2b9348'},
+        }}
+      />
+      <Stack.Screen
+        name="ImageScreen"
+        component={ImageScreen}
+        options={{headerShown: true, cardStyle: {backgroundColor: '#fff'}}}
+      />
+      <Stack.Screen
+        name="AddChatRoom"
+        component={AddChats}
+        options={{
+          headerShown: true,
+          cardStyle: {backgroundColor: '#fff'},
+          presentation: 'modal',
+          ...TransitionPresets.ModalPresentationIOS,
+        }}
       />
     </Stack.Navigator>
   );
@@ -22,6 +54,7 @@ const MainTab = () => {
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
+      sceneContainerStyle={{backgroundColor: '#000'}}
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
@@ -35,7 +68,7 @@ const MainTab = () => {
       }}>
       <Tab.Screen
         name="Home"
-        component={HomeStack}
+        component={Home}
         options={{
           tabBarIcon: ({focused}) => {
             return (
