@@ -30,9 +30,18 @@ const Settings = () => {
         borderRadius: 15,
         marginTop: padding.p25,
         marginHorizontal: padding.p6,
+        alignItems: 'center',
+        justifyContent: 'center',
       }}>
       <TouchableOpacity
-        style={{height: 100, width: '100%', backgroundColor: 'blue'}}
+        style={{
+          height: 100,
+          width: '100%',
+          backgroundColor: '#d3d3d3',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 20,
+        }}
         onPress={() => {
           auth()
             .signOut()
@@ -40,7 +49,9 @@ const Settings = () => {
               dispatch(SignOut());
               navigation.replace('SPLASH_SCREEN');
             });
-        }}></TouchableOpacity>
+        }}>
+        <Text style={{fontSize: 20, fontWeight: '700'}}>Sign Out</Text>
+      </TouchableOpacity>
     </ParentWrapper>
   );
 };

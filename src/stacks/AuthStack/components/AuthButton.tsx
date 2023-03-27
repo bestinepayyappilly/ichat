@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   GestureResponderEvent,
   StyleSheet,
   Text,
@@ -19,6 +20,7 @@ interface AuthButtonProps {
   buttonText: string;
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
+  loading?: boolean;
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({
@@ -38,10 +40,15 @@ const AuthButton: React.FC<AuthButtonProps> = ({
     color: '#fff',
     fontWeight: '700',
   },
+  loading,
 }) => {
   return (
     <TouchableOpacity onPress={onPress} style={buttonStyle}>
-      <Text style={textStyle}>{buttonText}</Text>
+      {loading ? (
+        <ActivityIndicator size={'large'} />
+      ) : (
+        <Text style={textStyle}>{buttonText}</Text>
+      )}
     </TouchableOpacity>
   );
 };

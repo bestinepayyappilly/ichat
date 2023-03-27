@@ -18,6 +18,7 @@ const Signup = () => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
     username: '',
     password: '',
@@ -47,7 +48,9 @@ const Signup = () => {
     if (error.password?.length > 2 || error.username?.length > 2) {
       ToastAndroid.show(error.password ? error.password : error.username, 100);
     } else {
+      setLoading(true);
       const {state, message} = await signUp(userName, password, firstName);
+      setLoading(false);
       if (state == 'success') {
         navigation.replace('SPLASH_SCREEN');
       }
@@ -148,6 +151,7 @@ const Signup = () => {
           }}
         />
         <AuthButton
+          loading={loading}
           onPress={() => {
             verifyAndSignup();
           }}

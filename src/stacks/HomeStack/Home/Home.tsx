@@ -38,19 +38,15 @@ const Home = () => {
     const unsubscribe = q.onSnapshot(snapshot => {
       setRooms(
         snapshot?.docs?.map(e => {
-          setLoading(false);
           return e.data();
         }),
       );
     });
+    setLoading(false);
     return unsubscribe;
   };
-  console.log(rooms);
 
-  const createNewChatRooms = (name, image) => {
-    console.log(rooms);
-    firestore().collection('chatrooms/users').add({name: 'Party'});
-  };
+  console.log(rooms);
   useEffect(() => {
     getChatRooms();
   }, []);
@@ -59,29 +55,6 @@ const Home = () => {
   }, []);
 
   const animatedValue = useSharedValue(0);
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            animatedValue.value,
-            [0, 0.5, 1],
-            [50, -10, 0],
-            Extrapolate.CLAMP,
-          ),
-        },
-        {
-          scale: interpolate(
-            animatedValue.value,
-            [0, 1],
-            [1.3, 1],
-            Extrapolate.CLAMP,
-          ),
-        },
-      ],
-      opacity: animatedValue.value,
-    };
-  }, []);
 
   useLayoutEffect(() => {
     StatusBar.setBarStyle('dark-content');
@@ -153,6 +126,10 @@ const Home = () => {
         }}>
         {rooms &&
           rooms.map((value, index) => {
+            const currentUser = value.users.filter(
+              item => item.id !== state.user._id,
+            );
+
             return (
               <TouchableOpacity
                 key={index}
@@ -186,13 +163,13 @@ const Home = () => {
                         fontSize: 20,
                         color: '#fff',
                       }}>
-                      {value.name[0].toUpperCase()}
+                      {currentUser[0]?.name[0].toUpperCase()}
                     </Text>
                   </View>
                   <View style={{padding: padding.p10}}>
                     <Text
                       style={{fontWeight: '700', fontSize: 16, color: '#000'}}>
-                      {value.name.toUpperCase()}
+                      {currentUser[0]?.name.toUpperCase()}
                     </Text>
                   </View>
                 </View>

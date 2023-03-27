@@ -10,6 +10,7 @@ import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {padding, ScreenHeight} from '../../../utils/dimensions';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 interface usersData {
   _id: string;
@@ -37,11 +38,23 @@ const AddChats = () => {
   };
   console.log(users);
 
+  const state = useSelector(state => {
+    return state;
+  });
+  console.log(state);
+
   const createChatRoom = (displayName: string, _id: string) => {
     firestore()
       .collection('chatrooms')
       .doc(_id)
-      .set({id: _id, name: displayName})
+      .set({
+        id: _id,
+        name: displayName,
+        users: [
+          {name: state.user.name, id: state.user._id},
+          {name: displayName, id: _id},
+        ],
+      })
       .then(data => {
         navigation.navigate('Chats', {
           chatRoomName: displayName,

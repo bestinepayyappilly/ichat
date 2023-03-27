@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
-import {GiftedChat, Send} from 'react-native-gifted-chat';
+import {GiftedChat, Message, Send} from 'react-native-gifted-chat';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -44,7 +44,7 @@ const Chats = ({route}) => {
     {_id: String, createdAt: String, text: String, user: String},
   ]);
   const [loading, setLoading] = useState(true);
-  const [tagged, setTagged] = useState('');
+  const [tagged, setTagged] = useState({});
   const state = useSelector(state => {
     return state;
   });
@@ -73,6 +73,7 @@ const Chats = ({route}) => {
   };
 
   const onSend = useCallback((chats = []) => {
+    console.log(chats);
     setChats(previousMessage => GiftedChat.append(previousMessage, chats));
     sendChat(chats[0]);
   }, []);
@@ -171,6 +172,9 @@ const Chats = ({route}) => {
             <View />
           );
         }}
+        onInputTextChanged={text => {
+          console.log(text);
+        }}
         renderActions={() => {
           return (
             <TouchableOpacity
@@ -197,13 +201,23 @@ const Chats = ({route}) => {
         messagesContainerStyle={{backgroundColor: 'transparent'}}
         user={state.user}
         messages={chats}
-        onSend={messages => onSend(messages)}
+        onSend={messages =>
+          onSend({...messages, taggedText: tagged?.text, replyTo: tagged?.id})
+        }
         renderBubble={({currentMessage, user}) => {
+          console.log('curr', currentMessage);
           return (
             <TouchableOpacity
               style={{zIndex: 999}}
               onLongPress={() => {
-                setTagged(currentMessage?.text);
+                setTagged({
+                  id: uuid.v4(),
+                  createdAt: new Date(),
+                  text: currentMessage?.text,
+                  user: state.user,
+                  image: currentMessage?.image,
+                  active: true,
+                });
               }}>
               <View
                 style={{
@@ -244,7 +258,7 @@ const Chats = ({route}) => {
                       justifyContent: 'flex-start',
                     }}>
                     <Image
-                      source={{uri: currentMessage.image}}
+                      source={{uri: currentMessage?.image}}
                       style={{
                         height: 200,
                         maxWidth: ScreenWidth / 2,
@@ -258,7 +272,7 @@ const Chats = ({route}) => {
                   </TouchableOpacity>
                 )}
                 <View>
-                  {currentMessage?.text.length > 1 ? (
+                  {currentMessage?.text?.length > 1 ? (
                     <Text
                       style={{
                         fontSize: 15,
@@ -283,7 +297,7 @@ const Chats = ({route}) => {
                           : 'flex-start',
                     }}>
                     {moment
-                      .unix(currentMessage?.createdAt._seconds)
+                      .unix(currentMessage?.createdAt?._seconds)
                       .format('hh:mm')}
                   </Text>
                 </View>
@@ -291,15 +305,15 @@ const Chats = ({route}) => {
             </TouchableOpacity>
           );
         }}
-        renderFooter={data => {
-          console.log('footer', data);
-          return tagged.length > 1 ? (
+        renderFooter={() => {
+          return tagged.active ? (
             <View
               style={{
                 width: ScreenWidth,
                 backgroundColor: '#fff',
                 alignItems: 'center',
                 flexDirection: 'row',
+                justifyContent: 'space-between',
               }}>
               <View
                 style={{
@@ -316,8 +330,33 @@ const Chats = ({route}) => {
                     borderRadius: 10,
                   }}
                 />
-                <Text style={{includeFontPadding: false}}>{tagged}</Text>
+                {tagged?.image && (
+                  <Image
+                    source={{uri: tagged?.image}}
+                    style={{height: 100, width: 100, borderRadius: 10}}
+                  />
+                )}
+                <Text style={{includeFontPadding: false}}>{tagged?.text}</Text>
               </View>
+              <TouchableOpacity
+                onPress={() => {
+                  setTagged({});
+                }}
+                style={{
+                  height: 30,
+                  width: 30,
+                  marginRight: padding.p20,
+                  transform: [
+                    {
+                      rotate: '45deg',
+                    },
+                  ],
+                }}>
+                <Image
+                  style={{height: 30, width: 30}}
+                  source={require('../../../assets/images/plus.png')}
+                />
+              </TouchableOpacity>
             </View>
           ) : (
             <View />
